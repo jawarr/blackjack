@@ -26,10 +26,15 @@
 
 */
 
-class blackjack
+package game;
+
+class Main
 {
     public static void main(String []args)
     {
         System.out.println("\033[0;37m" + " ___\n|K  |\n| " + "\033[0;91m" + "♡" + "\033[0;37m" + " |\n|  K|\n ̅ ̅ ̅ ");
+        Player player = new Player();
+        player.chips = 1000;
+        System.out.println("Chips: "+ player.chips);
     }
 }
