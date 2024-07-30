@@ -24,6 +24,13 @@
     -
     -
 
+    If we have time:
+    - Save chips to a file
+    - Print rules before starting
+    - Add option to Split
+    - Take unbuffered input (won't have to press enter every time)
+    - 
+    - 
 */
 
 package game;
@@ -33,8 +40,14 @@ class Main
     public static void main(String []args)
     {
         System.out.println("\033[0;37m" + " ___\n|K  |\n| " + "\033[0;91m" + "♡" + "\033[0;37m" + " |\n|  K|\n ̅ ̅ ̅ ");
+        
         Player player = new Player();
         player.chips = 1000;
         System.out.println("Chips: "+ player.chips);
+
+        Deck.addCards();
+        Deck.shuffle();
+
+        System.out.println("\nDeck: " + Deck.cards);
     }
 }
