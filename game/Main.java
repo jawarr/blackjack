@@ -45,9 +45,10 @@ class Main
         player.chips = 1000;
         System.out.println("Chips: "+ player.chips);
 
-        Deck.addCards();
-        Deck.shuffle();
+        Deck deck = new Deck();
 
-        System.out.println("\nDeck: " + Deck.cards);
+        deck.shuffle();
+
+        System.out.println("\nDeck: " + deck.cards);
     }
 }
