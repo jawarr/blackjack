@@ -37,24 +37,29 @@ package game;
 
 class Main {
     public static void main(String []args)
-    {
-        System.out.println("\033[0;37m" + " ___\n|K  |\n| " + "\033[0;91m" + "♡" + "\033[0;37m" + " |\n|  K|\n ̅ ̅ ̅ ");
-        
+    { 
         Player player = new Player();
-        player.chips = 1000;
-        System.out.println("Chips: "+ player.chips);
-
+        Player dealer = new Player();
         Deck deck = new Deck();
+
+        player.chips = 1000;
         deck.shuffle();
 
-        System.out.println("\nDeck: " + deck.cards);
-
         while (player.chips > 0) {
+         
             player.hand.add(deck.drawCard());
             player.hand.add(deck.drawCard());
+            dealer.hand.add(deck.drawCard());
+            dealer.hand.add(deck.drawCard());
+
+            Screen.display(player, dealer);
+            
+            Controller.input();
+            
+            
+
             player.chips = 0;
         }
-        
-        System.out.println("\nHand: " + player.hand);
+
     }
 }
