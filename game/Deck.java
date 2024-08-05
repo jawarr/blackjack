@@ -2,7 +2,6 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class Deck {
     
@@ -18,8 +17,7 @@ public class Deck {
     }
 
     String drawCard() {
-        Random rand = new Random();
-        String card = cards.get(rand.nextInt(cards.size()));
+        String card = cards.get(0);
         cards.remove(card);
         return card;
     }

@@ -5,8 +5,8 @@ import java.util.Scanner;
 public class Controller {
     static Scanner sc = new Scanner(System.in);
     
-    static String input () {
-        return sc.next();
+    static char input () {
+        return sc.next().charAt(0);
     }
 
 }

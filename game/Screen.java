@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Screen {
     static void display (Player player, Player dealer) {
+        System.out.print("\033[H\033[J");
         System.out.println(" ____  _            _     _            _    ");
         System.out.println("| __ )| | __ _  ___| | __(_) __ _  ___| | __");
         System.out.println("|  _ \\| |/ _` |/ __| |/ /| |/ _` |/ __| |/ /");
@@ -11,14 +12,15 @@ public class Screen {
         System.out.println("|____/|_|\\__,_|\\___|_|\\_\\/ |\\__,_|\\___|_|\\_\\");
         System.out.println("                       |__/                 ");
 
-        System.out.println("Dealer's Hand:");
+        System.out.println("Dealer's Hand: " + dealer.score);
         printHand(dealer.hand);
 
-        System.out.println("\nYour Hand:");
+        System.out.println("\nYour Hand: " + player.score);
         printHand(player.hand);
 
+
         System.out.println(player.chips + "⛃");
-        System.out.println("(H)it, (S)tand, or (D)ouble Down?");
+        System.out.println("\n(H)it, (S)tand, or (D)ouble Down?");
     }
 
     static void printHand(ArrayList<String> hand) {

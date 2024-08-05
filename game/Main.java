@@ -43,23 +43,41 @@ class Main {
         Deck deck = new Deck();
 
         player.chips = 1000;
+        player.bet = 50;
         deck.shuffle();
 
         while (player.chips > 0) {
-         
             player.hand.add(deck.drawCard());
             player.hand.add(deck.drawCard());
             dealer.hand.add(deck.drawCard());
             dealer.hand.add(deck.drawCard());
 
-            Screen.display(player, dealer);
+            player.getScore();
+            dealer.getScore();
             
-            Controller.input();
-            
-            
+            boolean stillDrawing = true;
 
-            player.chips = 0;
+            while (stillDrawing) {
+                Screen.display(player, dealer);
+
+                char input = Controller.input();
+                switch (input) {
+                    case 'H':
+                        player.hand.add(deck.drawCard());
+                        break;
+                    case 'S':
+                        stillDrawing = false;
+                        break;
+                    case 'D':
+                        player.hand.add(deck.drawCard());
+                        player.bet = 100;
+                        stillDrawing = false;
+                        break;
+                    default:
+                        break;
+                }
+                player.getScore();
+            }
         }
-
     }
 }
