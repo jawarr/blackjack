@@ -35,8 +35,7 @@
 
 package game;
 
-class Main
-{
+class Main {
     public static void main(String []args)
     {
         System.out.println("\033[0;37m" + " ___\n|K  |\n| " + "\033[0;91m" + "♡" + "\033[0;37m" + " |\n|  K|\n ̅ ̅ ̅ ");
@@ -46,9 +45,16 @@ class Main
         System.out.println("Chips: "+ player.chips);
 
         Deck deck = new Deck();
-
         deck.shuffle();
 
         System.out.println("\nDeck: " + deck.cards);
+
+        while (player.chips > 0) {
+            player.hand.add(deck.drawCard());
+            player.hand.add(deck.drawCard());
+            player.chips = 0;
+        }
+        
+        System.out.println("\nHand: " + player.hand);
     }
 }
