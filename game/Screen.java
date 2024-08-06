@@ -3,16 +3,22 @@ package game;
 import java.util.ArrayList;
 
 public class Screen {
-    static boolean initializing;
+    static boolean initializing, betting;
 
     static void display (Player player, Player dealer) {
+        
+        //clear 
         System.out.print("\033[H\033[J");
+        
+        //logo
         System.out.println(" ____  _            _     _            _    ");
         System.out.println("| __ )| | __ _  ___| | __(_) __ _  ___| | __");
         System.out.println("|  _ \\| |/ _` |/ __| |/ /| |/ _` |/ __| |/ /");
         System.out.println("| |_) | | (_| | (__|   < | | (_| | (__|   < ");
         System.out.println("|____/|_|\\__,_|\\___|_|\\_\\/ |\\__,_|\\___|_|\\_\\");
         System.out.println("                       |__/                 ");
+
+        System.out.println("\n\033[0;30mDealer hits on 16, and stands on 17 or greater \033[0;37m\n");
 
         System.out.println("Dealer's Hand: " + dealer.score);
         printHand(dealer.hand);
@@ -23,30 +29,22 @@ public class Screen {
         System.out.println(player.chips + "⛃");
 
         if (!initializing) {
-            
-            if (player.chips == 0) {
-                System.out.println("Out of chips! Exiting...");
-            }
-            else {
-                if (player.bust) {
-                    System.out.println("\nBust! Bet is lost. (R)eset or (Q)uit?");
-                }
-                else if (player.push) {
-                    System.out.println("\nPush! No chips gained. (R)eset or (Q)uit?");
-                }
-                else if (dealer.bust || player.win) {
-                    System.out.println("\nWin! Bet pays 3:2. (R)eset or (Q)uit?");
-                }
-                else if (dealer.win) {
-                    System.out.println("\nLost! Bet is lost. (R)eset or (Q)uit?");
-                }
-                else {
-                    System.out.println("\n(H)it, (S)tand, or (D)ouble Down?");
-                }
-            }
+            if (betting) 
+                System.out.print("\nHow many chips would you like to bet? ");
+            else if (player.bust) 
+                System.out.print("\nBust! Bet is lost. Play (A)gain or (Q)uit? ");            
+            else if (player.push) 
+                System.out.print("\nPush! Bet returned. Play (A)gain or (Q)uit? ");            
+            else if (dealer.bust || player.win) 
+                System.out.print("\nWin! Bet pays 3:2. Play (A)gain or (Q)uit? ");            
+            else if (dealer.win) 
+                System.out.print("\nLost! Bet is lost. Play (A)gain or (Q)uit? ");            
+            else 
+                System.out.print("\n(H)it, (S)tand, or (D)ouble Down? ");            
         }
     }
 
+    //method to print the hand formatted to look like playing cards
     static void printHand(ArrayList<String> hand) {
         hand.forEach(card -> System.out.print("\033[0;37m" + " ___ "));
         System.out.print("\n");

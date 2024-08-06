@@ -1,30 +1,7 @@
 /*
     Blackjack rules: https://bicyclecards.com/how-to-play/blackjack
 
-    What we need to do:
-    - Give player a certain amount of chips (1000?)
-    - Ask player what they want to bet
-    - Draw two cards for player and dealer (only show one for dealer)
-    - Prompt player to (H)it, (S)tand, or (D)ouble Down until they stand or bust (go over 21)
-        - (we can use whatever keys for this, I just thought the first letter would be easy)
-        - If player bust, bet chips are gone and redraw cards
-        - I think we can skip Split, its not super necessary to play the game
-
-    - If player does not bust, dealer hits until its hand is 17 or greater (maybe add a small delay between each card being shown)
-    - Compare dealer and players hand
-        - If player has higher hand or if dealer bust, double the player's chips they bet and redraw cards.
-        - If dealer has higher hand, bet chips are gone and redraw cards
-    
-    Classes we might need:
-    - Player: has fields for the player's hand and if they've busted
-    - Dealer: has fields for the dealer's hand and if they've busted, and a method for them to play
-    - Controller: methods to take and interpret input from user
-    - Deck object: I think an Arraylist is probably the easiest
-    - 
-    -
-    -
-
-    If we have time:
+    Things to add:
     - Save chips to a file
     - Print rules before starting
     - Add option to Split
@@ -40,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 class Main {
     public static void main(String[] args)
     { 
+        //initalizing objects
         Player player = new Player();
         Player dealer = new Player();
         Deck deck = new Deck();
@@ -50,7 +28,18 @@ class Main {
         deck.shuffle();
 
         while (player.chips > 0) {
-            
+
+            //getting the bet from the player and checking if its more than the chips they own
+            Screen.betting = true;
+            Screen.display(player, dealer);
+            player.bet = Controller.getBet();
+            if (player.bet > player.chips) {
+                player.bet = player.chips;
+            }
+            player.chips -= player.bet;
+            Screen.betting = false;
+
+            //drawing two cards for the player and one for the dealer, with a short pause between each
             Screen.initializing = true;
 
             Screen.display(player, dealer);
@@ -74,6 +63,8 @@ class Main {
             try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException e) {Thread.currentThread().interrupt();}
             
             Screen.initializing = false;
+
+
             
             while (player.stillDrawing && player.score <= 21) {
                 Screen.display(player, dealer);
@@ -90,7 +81,8 @@ class Main {
                     case 'D':
                     case 'd':
                         player.hand.add(deck.drawCard());
-                        player.bet = 100;
+                        if (player.bet * 2 > player.chips ) player.bet = player.chips;
+                        else player.bet *= 2;
                         player.stillDrawing = false;
                         break;
                     default:
@@ -129,21 +121,18 @@ class Main {
                 }
             }
 
-            if (player.win) {
-                player.chips += (player.bet / 3) * 2;
-            }
-            else if(player.push) {
-
-            } else {
-                player.chips -= player.bet;
-            }
+            //deciding how many chips to award
+            if (player.win) 
+                player.chips = player.chips + player.bet + (player.bet / 3) * 2;
             
-
+                else if (player.push) 
+                player.chips += player.bet;
+            
+            //prompting for quit or reset
             Screen.display(player, dealer);
-            
             switch (Controller.getInput()) {
-                case 'R':
-                case 'r':
+                case 'A':
+                case 'a':
                     player.initalize();
                     dealer.initalize();
                     deck.shuffle();
@@ -158,5 +147,7 @@ class Main {
                     continue;
             }
         }
+        System.out.println("\nOut of chips! Exiting...");
+        return;
     }
 }

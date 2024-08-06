@@ -13,6 +13,7 @@ public class Deck {
         return card;
     }
 
+    // shuffle method refills deck to full and shuffles them randomly
     void shuffle() {
         cards.clear();
         for (int i = 2; i < 15; i++) {

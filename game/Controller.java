@@ -9,4 +9,7 @@ public class Controller {
         return sc.next().charAt(0);
     }
 
+    static int getBet() {
+        return sc.nextInt();
+    }
 }
