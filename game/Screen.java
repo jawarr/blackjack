@@ -3,6 +3,8 @@ package game;
 import java.util.ArrayList;
 
 public class Screen {
+    static boolean initializing;
+
     static void display (Player player, Player dealer) {
         System.out.print("\033[H\033[J");
         System.out.println(" ____  _            _     _            _    ");
@@ -18,9 +20,31 @@ public class Screen {
         System.out.println("\nYour Hand: " + player.score);
         printHand(player.hand);
 
-
         System.out.println(player.chips + "⛃");
-        System.out.println("\n(H)it, (S)tand, or (D)ouble Down?");
+
+        if (!initializing) {
+            
+            if (player.chips == 0) {
+                System.out.println("Out of chips! Exiting...");
+            }
+            else {
+                if (player.bust) {
+                    System.out.println("\nBust! Bet is lost. (R)eset or (Q)uit?");
+                }
+                else if (player.push) {
+                    System.out.println("\nPush! No chips gained. (R)eset or (Q)uit?");
+                }
+                else if (dealer.bust || player.win) {
+                    System.out.println("\nWin! Bet pays 3:2. (R)eset or (Q)uit?");
+                }
+                else if (dealer.win) {
+                    System.out.println("\nLost! Bet is lost. (R)eset or (Q)uit?");
+                }
+                else {
+                    System.out.println("\n(H)it, (S)tand, or (D)ouble Down?");
+                }
+            }
+        }
     }
 
     static void printHand(ArrayList<String> hand) {

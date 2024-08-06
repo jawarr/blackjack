@@ -35,48 +35,127 @@
 
 package game;
 
+import java.util.concurrent.TimeUnit;
+
 class Main {
-    public static void main(String []args)
+    public static void main(String[] args)
     { 
         Player player = new Player();
         Player dealer = new Player();
         Deck deck = new Deck();
-
+        
+        player.initalize();
         player.chips = 1000;
-        player.bet = 50;
+        dealer.initalize();
         deck.shuffle();
 
         while (player.chips > 0) {
-            player.hand.add(deck.drawCard());
-            player.hand.add(deck.drawCard());
-            dealer.hand.add(deck.drawCard());
-            dealer.hand.add(deck.drawCard());
-
-            player.getScore();
-            dealer.getScore();
             
-            boolean stillDrawing = true;
+            Screen.initializing = true;
 
-            while (stillDrawing) {
+            Screen.display(player, dealer);
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException e) {Thread.currentThread().interrupt();}
+
+            player.hand.add(deck.drawCard());
+            player.getScore();
+            Screen.display(player, dealer);
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException e) {Thread.currentThread().interrupt();}
+            
+
+            dealer.hand.add(deck.drawCard());
+            dealer.getScore();
+            Screen.display(player, dealer);
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException e) {Thread.currentThread().interrupt();}
+            
+
+            player.hand.add(deck.drawCard());
+            player.getScore();
+            Screen.display(player, dealer);
+            try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException e) {Thread.currentThread().interrupt();}
+            
+            Screen.initializing = false;
+            
+            while (player.stillDrawing && player.score <= 21) {
                 Screen.display(player, dealer);
-
-                char input = Controller.input();
-                switch (input) {
+                char in = Controller.getInput();
+                switch (in) {
                     case 'H':
+                    case 'h':
                         player.hand.add(deck.drawCard());
                         break;
                     case 'S':
-                        stillDrawing = false;
+                    case 's':
+                        player.stillDrawing = false;
                         break;
                     case 'D':
+                    case 'd':
                         player.hand.add(deck.drawCard());
                         player.bet = 100;
-                        stillDrawing = false;
+                        player.stillDrawing = false;
                         break;
                     default:
                         break;
                 }
                 player.getScore();
+            }
+
+            //if player bust, quit before dealer draws
+            if (player.score > 21) {
+                player.bust = true;
+                Screen.display(player, dealer);
+            } 
+            //dealer begins to draw
+            else {
+                while (!dealer.bust && dealer.score < 17 && dealer.score < player.score) {
+                    try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException e) {Thread.currentThread().interrupt();}
+                    dealer.hand.add(deck.drawCard());
+                    dealer.getScore();
+                    Screen.display(player, dealer);
+                    
+                    if (dealer.score > 21) {
+                        dealer.bust = true;
+                    }
+                }
+                
+                //set final game state
+                if (player.score == dealer.score) {
+                    player.push = true;
+                }
+                else if ((player.score > dealer.score) || dealer.bust) {
+                    player.win = true;
+                } 
+                else {
+                    dealer.win = true;
+                }
+            }
+
+            if (player.win) {
+                player.chips += (player.bet / 3) * 2;
+            }
+            else if(player.push) {
+
+            } else {
+                player.chips -= player.bet;
+            }
+            
+
+            Screen.display(player, dealer);
+            
+            switch (Controller.getInput()) {
+                case 'R':
+                case 'r':
+                    player.initalize();
+                    dealer.initalize();
+                    deck.shuffle();
+                    continue;
+                case 'Q':
+                case 'q':
+                    return;
+                default:
+                    player.initalize();
+                    dealer.initalize();
+                    deck.shuffle();
+                    continue;
             }
         }
     }

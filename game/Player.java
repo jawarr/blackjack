@@ -4,7 +4,18 @@ import java.util.ArrayList;
 
 public class Player {
     int chips, score, bet;
+    boolean bust, win, push, stillDrawing;
     ArrayList<String> hand = new ArrayList<String>();
+
+    void initalize() {
+        hand.clear();
+        score = 0;
+        bet = 50;
+        bust = false;
+        win = false;
+        push = false;
+        stillDrawing = true;
+    }
 
     void getScore() {
         score = 0;
@@ -17,12 +28,13 @@ public class Player {
                 score += 10;
             }
             else {
-                if (score <= 10) {
-                    score += 11;
-                }
-                else {
-                    score += 1;
-                }
+                score += 11;
+            }
+        });
+
+        hand.forEach((card) -> {
+            if ((card.contains("14")) && score > 21) {
+                score -= 10;
             }
         });
     }
